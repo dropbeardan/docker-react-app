@@ -4,7 +4,7 @@ module.exports = {
 	entry: './src/app.tsx',
 	output: {
 		filename: '[name].bundle.js',
-		path: __dirname + '/dist'
+		path: __dirname + '../dist'
 	},
 
 	resolve: {
@@ -38,7 +38,7 @@ module.exports = {
 
 	plugins: [
 		new CopyWebpackPlugin([
-			{ from: './src/index.html', to: __dirname + '/dist' }
+			{ from: './src/index.html', to: __dirname + '../dist' }
 		])
 	]
 };
