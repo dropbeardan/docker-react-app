@@ -1,5 +1,6 @@
 import express from 'express';
 import axios from 'axios';
+import cors from 'cors';
 
 import SERVICE2_URL from './SERVICE2_URL.json';
 
@@ -9,6 +10,8 @@ const service2URL =
 	process.env.NODE_ENV === 'development'
 		? SERVICE2_URL.development
 		: SERVICE2_URL.production;
+
+app.use(cors());
 
 app.get('/service1', (req: any, res: any) =>
 	res.send('Web Service 1 Response!')
