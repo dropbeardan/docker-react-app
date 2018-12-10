@@ -1,7 +1,7 @@
 import express from 'express';
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.get('/service1', (req: any, res: any) =>
 	res.send('Web Service 1 Response!')
