@@ -6,6 +6,7 @@
 		"module": "commonjs",
 		"skipLibCheck": true,
 		"target": "es5",
-		"jsx": "react"
+		"jsx": "react",
+		"resolveJsonModule": true
 	}
 }
