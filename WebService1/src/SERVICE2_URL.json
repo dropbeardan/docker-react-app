@@ -1,4 +1,4 @@
 {
 	"development": "http://localhost:3002",
-	"production": "http://localhost:3002"
+	"production": "http://webservice2:3002"
 }

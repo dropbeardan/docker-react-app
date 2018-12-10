@@ -1,0 +1,26 @@
+version: '3'
+networks:
+  WebServiceLAN:
+services:
+  webservice1:
+    build: ./WebService1
+    command: npm start
+    container_name: webservice1
+    depends_on:
+      - webservice2
+    environment:
+      - NODE_ENV=production
+    networks:
+      - WebServiceLAN
+    ports:
+      - 3001:3001
+  webservice2:
+    build: ./WebService2
+    command: npm start
+    container_name: webservice2
+    environment:
+      - NODE_ENV=production
+    networks:
+      - WebServiceLAN
+    ports:
+      - 3002:3002

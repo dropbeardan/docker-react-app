@@ -1,0 +1,20 @@
+{
+	"name": "docker-react-app",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"build": "npm run build --prefix Client && npm run build --prefix WebService1 && npm run build --prefix WebService2 && docker-compose build && docker-compose up",
+		"preview": "npm run preview --prefix Client && npm run preview --prefix WebService1 | npm run preview --prefix WebService2"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/dropbeardan/docker-react-app.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/dropbeardan/docker-react-app/issues"
+	},
+	"homepage": "https://github.com/dropbeardan/docker-react-app#readme"
+}
