@@ -1,0 +1,82 @@
+version: 2.1
+
+jobs:
+  install_root_modules:
+    docker:
+      - image: circleci/node:11
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node-modules-{{ checksum "yarn.lock" }}
+            - node-modules- # used if checksum fails
+      - run: yarn install --production # Install root node_module dependencies.
+      - save_cache:
+          paths:
+            - node_modules
+
+  test_client:
+    working_directory: ~/Client
+    docker:
+      -image: circleci/node:11
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node-modules-{{ checksum "yarn.lock" }}
+            - node-modules- # used if checksum fails
+      - run: yarn install --production # Install root node_module dependencies.
+      - save_cache:
+          paths:
+            - node_modules
+      - run: yarn test
+
+  test_webservice1:
+    working_directory: ~/WebService1
+    docker:
+      -image: circleci/node:11
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node-modules-{{ checksum "yarn.lock" }}
+            - node-modules- # used if checksum fails
+      - run: yarn install --production # Install root node_module dependencies.
+      - save_cache:
+          paths:
+            - node_modules
+      - run: yarn test
+
+  test_webservice2:
+    working_directory: ~/WebService2
+    docker:
+      -image: circleci/node:11
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node-modules-{{ checksum "yarn.lock" }}
+            - node-modules- # used if checksum fails
+      - run: yarn install --production # Install root node_module dependencies.
+      - save_cache:
+          paths:
+            - node_modules
+      - run: yarn test
+
+  deploy:
+    run: echo "WOOOSH. THE ROCKET IS LAUNCHING."
+
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - install_root_modules
+      - test_client
+      - test_webservice1
+      - test_webservice2
+      - deploy:
+          requires:
+            - install_root_modules
+            - test_client
+            - test_webservice1
+            - test_webservice2
