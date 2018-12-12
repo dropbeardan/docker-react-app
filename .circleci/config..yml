@@ -60,7 +60,7 @@ jobs:
   #           - node_modules
   #     - run: yarn test
   deploy:
-    run: echo "WOOOSH. THE ROCKET IS LAUNCHING."
+    run: echo "WOOOSH. THE ROCKET IS LAUNCHING.1"
 
 workflows:
   version: 2
