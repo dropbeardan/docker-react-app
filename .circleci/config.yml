@@ -1,0 +1,144 @@
+version: 2.1
+
+jobs:
+  checkout_project:
+    working_directory: ~/app-name
+    docker:
+      - image: circleci/node:11
+    steps:
+      - checkout
+
+      # Cache Artifact.
+      - save_cache:
+          key: checkout_project-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/app-name
+
+  install_root_modules:
+    working_directory: ~/app-name
+    docker:
+      - image: circleci/node:11
+    steps:
+      # Continue from checkout_project job.
+      - restore_cache:
+          keys:
+            - checkout_project-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore_cache:
+          keys:
+            - node-modules-{{ checksum "yarn.lock" }}
+      - run: yarn install --production
+
+      - save_cache:
+          key: node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+
+      # Cache Artifact.
+      - save_cache:
+          key: install_root_modules-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/app-name
+
+  test_client:
+    working_directory: ~/app-name
+    docker:
+      - image: circleci/node:11
+    steps:
+      # Continue from checkout_project job.
+      - restore_cache:
+          keys:
+            - checkout_project-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore_cache:
+          keys:
+            - test_client-node-modules-{{ checksum "Client/yarn.lock" }}
+      - run: cd Client && yarn install
+
+      - save_cache:
+          key: test_client-node-modules-{{ checksum "Client/yarn.lock" }}
+          paths:
+            - Client/node_modules
+
+      - run: cd Client && yarn test
+
+      # Cache Artifact.
+      - save_cache:
+          key: test_client-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/app-name
+
+  test_webservice1:
+    working_directory: ~/app-name
+    docker:
+      - image: circleci/node:11
+    steps:
+      # Continue from checkout_project job.
+      - restore_cache:
+          keys:
+            - checkout_project-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore_cache:
+          keys:
+            - test_webservice1-node-modules-{{ checksum "WebService1/yarn.lock" }}
+
+      - run: cd WebService1 && yarn install
+
+      - save_cache:
+          key: test_webservice1-node-modules-{{ checksum "WebService1/yarn.lock" }}
+          paths:
+            - WebService1/node_modules
+      - run: cd WebService1 && yarn test
+
+      # Cache Artifact.
+      - save_cache:
+          key: test_webservice1-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/app-name
+
+  test_webservice2:
+    working_directory: ~/app-name
+    docker:
+      - image: circleci/node:11
+    steps:
+      # Continue from checkout_project job.
+      - restore_cache:
+          keys:
+            - checkout_project-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore_cache:
+          keys:
+            - test_webservice2-node-modules-{{ checksum "WebService2/yarn.lock" }}
+
+      - run: cd WebService2 && yarn install
+
+      - save_cache:
+          key: test_webservice2-node-modules-{{ checksum "WebService2/yarn.lock" }}
+          paths:
+            - WebService2/node_modules
+
+      - run: cd WebService2 && yarn test
+
+      # Cache Artifact.
+      - save_cache:
+          key: test_webservice2-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/app-name
+
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - checkout_project
+      - install_root_modules:
+          requires:
+            - checkout_project
+      - test_client:
+          requires:
+            - checkout_project
+      - test_webservice1:
+          requires:
+            - checkout_project
+      - test_webservice2:
+          requires:
+            - checkout_project
